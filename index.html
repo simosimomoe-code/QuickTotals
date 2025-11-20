@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>QuickTotals — Premium</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#050506;
+    --panel: rgba(255,255,255,0.03);
+    --glass-border: rgba(255,255,255,0.04);
+    --muted: #B6C0C6;
+    --text: #E6EEF2;
+    --accent: #00D9FF;
+    --accent-2: #3AE8FF;
+    --radius:16px;
+    --soft-shadow: 0 10px 40px rgba(2,6,23,0.6);
+  }
+
+  /* Reset */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Poppins", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:
+      radial-gradient(800px 400px at 10% 10%, rgba(3,217,255,0.03), transparent 6%),
+      linear-gradient(180deg,#070708 0%, #050506 100%);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  .container{max-width:1180px;margin:0 auto;padding:0 20px}
+
+  /* NAVBAR - sticky glass */
+  nav{
+    position:fixed; left:0; right:0; top:16px; z-index:9999; display:flex; justify-content:center; pointer-events:none;
+  }
+  .nav-inner{
+    width:calc(100% - 40px); max-width:1180px; pointer-events:auto;
+    display:flex; align-items:center; justify-content:space-between;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:14px; padding:10px 14px; border:1px solid var(--glass-border);
+    backdrop-filter: blur(8px) saturate(120%); -webkit-backdrop-filter: blur(8px) saturate(120%);
+    box-shadow:var(--soft-shadow); transition:transform .22s ease, box-shadow .22s ease;
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo-mark{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;
+    background: linear-gradient(135deg, rgba(0,217,255,0.12), rgba(58,232,255,0.06)); border:1px solid rgba(255,255,255,0.03)}
+  .brand .title{font-weight:700;letter-spacing:0.2px}
+  .brand .small{font-size:12px;color:var(--muted);font-weight:600}
+
+  .nav-links{display:flex;gap:12px;align-items:center}
+  .nav-links a{color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:10px; font-weight:600; font-size:14px}
+  .nav-links a:hover{color:var(--accent); transform:translateY(-3px)}
+
+  .cta{
+    background: linear-gradient(90deg,var(--accent),var(--accent-2));
+    color:#041014; font-weight:800; padding:8px 12px; border-radius:10px; border: none; box-shadow: 0 12px 36px rgba(0,217,255,0.10);
+  }
+
+  /* HERO */
+  header.hero{
+    padding:120px 20px 60px; min-height:72vh; display:flex; align-items:center;
+  }
+  .hero-inner{display:flex; gap:44px; width:100%; max-width:1180px; margin:0 auto; align-items:center}
+  .hero-left{flex:1; min-width:260px}
+  .kicker{display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg, rgba(0,217,255,0.06), rgba(58,232,255,0.03)); color:var(--accent); font-weight:700; font-size:13px}
+  .hero h1{font-size:clamp(26px,4.2vw,44px); margin:18px 0 8px; line-height:1.02}
+  .hero p{color:var(--muted); margin-bottom:20px; max-width:720px}
+
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{
+    padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03); background:transparent; color:var(--text); font-weight:700; cursor:pointer; transition:transform .18s ease, box-shadow .18s ease;
+    backdrop-filter: blur(6px);
+  }
+  .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#041014; box-shadow:0 12px 36px rgba(0,217,255,0.08)}
+  .btn:hover{transform:translateY(-6px)}
+  .btn:active{transform:translateY(-2px) scale(.998)}
+
+  .hero-right{flex:0 0 420px; min-width:260px}
+  .preview-card{border-radius:14px;padding:16px;background:var(--panel); border:1px solid var(--glass-border); backdrop-filter: blur(10px); box-shadow:var(--soft-shadow)}
+
+  .mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .mini-item{padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); font-weight:700; color:var(--text); font-size:13px}
+  .mini-item small{display:block;color:var(--muted);font-weight:600;font-size:12px;margin-top:6px}
+
+  /* SECTION TITLES */
+  section{padding:56px 20px}
+  .section-title{font-size:18px;margin-bottom:18px;font-weight:700;color:var(--text)}
+
+  /* TOOLS GRID (tiles) */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media (max-width:920px){ .tools-grid{grid-template-columns:1fr} .hero-inner{flex-direction:column-reverse}}
+
+  .tile{
+    display:flex; gap:12px; align-items:flex-start; padding:18px;border-radius:14px;background:var(--panel);
+    border:1px solid var(--glass-border); transition: transform .22s ease, box-shadow .22s ease; cursor:pointer;
+  }
+  .tile:hover{transform:translateY(-10px); box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+  .tile .icon{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.02)}
+  .tile .title{font-weight:700}
+  .tile .desc{color:var(--muted); font-size:13px; margin-top:6px}
+
+  /* TOOL DETAIL cards */
+  .tool-card{margin-top:18px;padding:20px;border-radius:16px;background:var(--panel); border:1px solid var(--glass-border); backdrop-filter: blur(10px); box-shadow:var(--soft-shadow)}
+  .tool-card h2{color:var(--accent); margin:0 0 8px}
+  .muted{color:var(--muted)}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600}
+  input[type="number"], input[type="text"], select{
+    width:100%; padding:12px;border-radius:12px;border:none; outline:none; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); color:var(--text); font-weight:600;
+  }
+  .row{display:flex; gap:12px; align-items:center}
+  .col{flex:1}
+
+  .calc-row{display:flex; gap:12px; align-items:center; margin-top:14px}
+  .result{margin-left:auto; padding:10px 14px; min-width:150px; text-align:center; border-radius:12px; background:linear-gradient(180deg, rgba(0,217,255,0.03), rgba(58,232,255,0.01)); border:1px solid rgba(0,217,255,0.06); font-weight:800; color:var(--text)}
+  .small-hint{font-size:13px;color:var(--muted);margin-top:10px}
+
+  /* Why + Testimonials */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:920px){ .grid-3{grid-template-columns:1fr} }
+
+  .why{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
+  .testi{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02); color:var(--muted)}
+
+  /* FAQ */
+  .faq .item{border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); margin-bottom:10px}
+  .faq .q{padding:14px; display:flex; justify-content:space-between; cursor:pointer; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+  .faq .a{padding:0 14px; max-height:0; overflow:hidden; transition:max-height .26s ease; color:var(--muted)}
+
+  footer{padding:28px 20px; text-align:center; color:var(--muted); border-top:1px solid rgba(255,255,255,0.02); margin-top:28px}
+
+  /* back to top */
+  #topBtn{position:fixed;right:18px;bottom:18px;width:52px;height:52px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#041014;font-weight:800;display:none;z-index:999;box-shadow:0 16px 40px rgba(0,217,255,0.12); cursor:pointer}
+
+  /* subtle animations */
+  .fade-up{opacity:0; transform:translateY(18px); animation:fadeUp .6s forwards}
+  .fade-delay{animation-delay:.09s}
+  @keyframes fadeUp{to{opacity:1; transform:none}}
+
+  /* small helpers */
+  .copy-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
+  .hint{font-size:13px;color:var(--muted)}
+  .center{display:flex;align-items:center;justify-content:center}
+  .muted-2{color:#9aa6ad}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner container" role="navigation" aria-label="Top Navigation">
+    <div class="brand">
+      <div class="logo-mark" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient>
+          </defs>
+          <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#lg)"/>
+          <path d="M7 9h10M7 15h6" stroke="#021018" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="title">QuickTotals</div>
+        <div class="small">Smart Daily Calculations</div>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="#home">الرئيسية</a>
+      <a href="#toolsGrid">الأدوات</a>
+      <a href="#why">علاش QuickTotals</a>
+      <a href="#faq">الأسئلة</a>
+      <a class="cta" href="#tools">ابدأ دابا</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header id="home" class="hero">
+  <div class="hero-inner container">
+    <div class="hero-left fade-up">
+      <div class="kicker">سريع • خاص • بدون تسجيل</div>
+      <h1>QuickTotals — حسابات يومية بطريقة بروفيشنال</h1>
+      <p>أدوات سريعة، دقيقة، وتصميم فخم. كل حاجة خدامة محلياً فالمتصفح — من النِسب، لتحويل العملة، للـBMI وكمية من الحاجات اللي كتحتاج يومياً.</p>
+
+      <div class="hero-actions">
+        <button class="btn primary" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">ابدأ دابا</button>
+        <button class="btn" onclick="document.getElementById('toolsGrid').scrollIntoView({behavior:'smooth'})">شوف جميع الأدوات</button>
+      </div>
+    </div>
+
+    <div class="hero-right fade-up fade-delay">
+      <div class="preview-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-weight:800">معاينة سريعة</div>
+          <div class="muted">محلي • خصوصي</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-item">النسبة<small>زيادة/نقصان</small></div>
+          <div class="mini-item">العملة<small>تحويل سريع</small></div>
+          <div class="mini-item">BMI<small>kg / m²</small></div>
+          <div class="mini-item">كلمة السر<small>قوية</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- TOOLS GRID -->
+<section id="toolsGrid" class="container fade-up">
+  <div class="section-title">الأدوات ديالنا</div>
+  <div class="tools-grid">
+    <div class="tile" onclick="scrollTo('percentageTool')" title="Percentage">
+      <div class="icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g1"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><path d="M20 4L4 20" stroke="url(#g1)" stroke-width="1.6" stroke-linecap="round"/><circle cx="7.5" cy="7.5" r="1.8" fill="url(#g1)"/><circle cx="16.5" cy="16.5" r="1.8" fill="url(#g1)"/></svg>
+      </div>
+      <div>
+        <div class="title">حاسبة النسبة</div>
+        <div class="desc">زيادة، نقصان أو حساب نسبة من قيمة.</div>
+      </div>
+    </div>
+
+    <div class="tile" onclick="scrollTo('currencyTool')" title="Currency">
+      <div class="icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g2"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><path d="M12 6v12" stroke="url(#g2)" stroke-width="1.6"/><path d="M9 9h6" stroke="url(#g2)" stroke-width="1.6"/><path d="M9 15h6" stroke="url(#g2)" stroke-width="1.6"/></svg>
+      </div>
+      <div>
+        <div class="title">محول العملات</div>
+        <div class="desc">حط المبلغ والسعر لتحويله بسرعة.</div>
+      </div>
+    </div>
+
+    <div class="tile" onclick="scrollTo('averageTool')" title="Average">
+      <div class="icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g3"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><path d="M3 12h4l4-8 4 16 4-10h2" stroke="url(#g3)" stroke-width="1.6"/></svg>
+      </div>
+      <div>
+        <div class="title">المتوسط</div>
+        <div class="desc">متوسط مجموعة أرقام بسرعة.</div>
+      </div>
+    </div>
+
+    <div class="tile" onclick="scrollTo('bmiTool')" title="BMI">
+      <div class="icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g4"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><path d="M12 2c2.5 0 4.5 2 4.5 4.5S14.5 11 12 11 7.5 9 7.5 6.5 9.5 2 12 2z" stroke="url(#g4)" stroke-width="1"/><path d="M4 20c1-3 4-4 8-4s7 1 8 4" stroke="url(#g4)" stroke-width="1.2"/></svg>
+      </div>
+      <div>
+        <div class="title">BMI</div>
+        <div class="desc">مؤشر كتلة الجسم (وزن/طول²).</div>
+      </div>
+    </div>
+
+    <div class="tile" onclick="scrollTo('unitTool')" title="Unit">
+      <div class="icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g5"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><rect x="3" y="6" width="7" height="12" rx="2" stroke="url(#g5)"/><rect x="14" y="6" width="7" height="12" rx="2" stroke="url(#g5)"/></svg>
+      </div>
+      <div>
+        <div class="title">محول الوحدات</div>
+        <div class="desc">طول، وزن، حجم — اختار التحويل.</div>
+      </div>
+    </div>
+
+    <div class="tile" onclick="scrollTo('passwordTool')" title="Password">
+      <div class="icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g6"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><path d="M21 10a3 3 0 1 0-4.24-4.24L7 15H4v3h3v-2h1v2h3v-2h1" stroke="url(#g6)"/></svg>
+      </div>
+      <div>
+        <div class="title">مولد كلمة السر</div>
+        <div class="desc">اختار الطول والتعقيد وطلع كلمة آمنة.</div>
+      </div>
+    </div>
+
+    <div class="tile" onclick="scrollTo('loanTool')" title="Loan">
+      <div class="icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g7"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><path d="M3 12h18" stroke="url(#g7)" stroke-width="1.6"/></svg>
+      </div>
+      <div>
+        <div class="title">حاسبة القرض</div>
+        <div class="desc">فائدة بسيطة و المبلغ الإجمالي.</div>
+      </div>
+    </div>
+
+    <div class="tile" onclick="scrollTo('randomNumberTool')" title="Random">
+      <div class="icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g8"><stop offset="0" stop-color="#00D9FF"/><stop offset="1" stop-color="#3AE8FF"/></linearGradient></defs><rect x="3.5" y="3.5" width="17" height="17" rx="3.5" stroke="url(#g8)"/><circle cx="9" cy="9" r="1" fill="url(#g8)"/><circle cx="15" cy="15" r="1" fill="url(#g8)"/></svg>
+      </div>
+      <div>
+        <div class="title">عدد عشوائي</div>
+        <div class="desc">طلع عدد صحيح بين حدين.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TOOLS DETAILS -->
+<section id="tools" class="container fade-up">
+  <div class="section-title">الأدوات — التفاصيل</div>
+
+  <!-- Percentage -->
+  <div id="percentageTool" class="tool-card" aria-labelledby="perch">
+    <h2 id="perch">حاسبة النسبة</h2>
+    <div class="muted">حساب زيادة، نقصان، أو نسبة من قيمة.</div>
+
+    <div style="margin-top:12px">
+      <div class="row">
+        <div class="col">
+          <label for="percOriginal">القيمة الأصلية</label>
+          <input id="percOriginal" type="number" placeholder="مثال: 100">
+        </div>
+        <div style="width:160px">
+          <label for="percValue">النسبة (%)</label>
+          <input id="percValue" type="number" placeholder="مثال: 15">
+        </div>
+        <div style="width:160px">
+          <label for="percMode">الوضع</label>
+          <select id="percMode" style="padding:12px;border-radius:12px">
+            <option value="increase">زيادة +</option>
+            <option value="decrease">نقصان −</option>
+            <option value="of">% من القيمة</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="calc-row">
+        <button class="btn primary" onclick="calculatePercentage()">حسب الآن</button>
+        <div class="result" id="percResult">—</div>
+        <button class="copy-btn" onclick="copyResult('percResult')" title="نسخ النتيجة">نسخ</button>
+      </div>
+      <div class="small-hint">نصيحة: استعمل الوضع "من" باش تعرف شحال تمثل النسبة من القيمة.</div>
+    </div>
+  </div>
+
+  <div style="height:18px"></div>
+
+  <!-- Currency -->
+  <div id="currencyTool" class="tool-card">
+    <h2>محول العملات</h2>
+    <div class="muted">أدخل المبلغ وسعر الصرف (1 => 2).</div>
+
+    <div style="margin-top:12px" class="row">
+      <div class="col">
+        <label for="curAmount">المبلغ</label>
+        <input id="curAmount" type="number" placeholder="مثال: 100">
+      </div>
+      <div style="width:200px">
+        <label for="curRate">سعر الصرف</label>
+        <input id="curRate" type="number" placeholder="مثال: 1.12">
+      </div>
+    </div>
+
+    <div class="calc-row">
+      <button class="btn primary" onclick="calculateCurrency()">حوّل</button>
+      <div class="result" id="curResult">—</div>
+      <button class="copy-btn" onclick="copyResult('curResult')">نسخ</button>
+    </div>
+  </div>
+
+  <div style="height:18px"></div>
+
+  <!-- Average -->
+  <div id="averageTool" class="tool-card">
+    <h2>حساب المتوسط</h2>
+    <div class="muted">أدخل أرقام مفصولة بفاصلة.</div>
+
+    <div style="margin-top:12px">
+      <label for="avgNumbers">الأرقام (مثال: 10,20,30)</label>
+      <input id="avgNumbers" type="text" placeholder="10, 20, 30">
+    </div>
+
+    <div class="calc-row">
+      <button class="btn primary" onclick="calculateAverage()">حسب</button>
+      <div class="result" id="avgResult">—</div>
+      <button class="copy-btn" onclick="copyResult('avgResult')">نسخ</button>
+    </div>
+  </div>
+
+  <div style="height:18px"></div>
+
+  <!-- BMI -->
+  <div id="bmiTool" class="tool-card">
+    <h2>BMI — مؤشر الكتلة</h2>
+    <div class="muted">kg و cm. BMI = وزن / (طول بالمتر)²</div>
+
+    <div style="margin-top:12px" class="row">
+      <div class="col">
+        <label for="bmiWeight">الوزن (كغ)</label>
+        <input id="bmiWeight" type="number" placeholder="مثال: 72">
+      </div>
+      <div class="col">
+        <label for="bmiHeight">الطول (سم)</label>
+        <input id="bmiHeight" type="number" placeholder="مثال: 175">
+      </div>
+    </div>
+
+    <div class="calc-row">
+      <button class="btn primary" onclick="calculateBMI()">حسب</button>
+      <div class="result" id="bmiResult">—</div>
+      <button class="copy-btn" onclick="copyResult('bmiResult')">نسخ</button>
+    </div>
+    <div class="small-hint">التصنيف: Underweight / Normal / Overweight / Obese</div>
+  </div>
+
+  <div style="height:18px"></div>
+
+  <!-- Unit -->
+  <div id="unitTool" class="tool-card">
+    <h2>محول الوحدات</h2>
+    <div class="muted">تحويل cm↔m، kg↔g، L↔mL</div>
+
+    <div style="margin-top:12px" class="row">
+      <div class="col">
+        <label for="unitValue">القيمة</label>
+        <input id="unitValue" type="number" placeholder="مثال: 100">
+      </div>
+      <div style="width:220px">
+        <label for="unitType">نوع التحويل</label>
+        <select id="unitType" style="padding:12px;border-radius:12px">
+          <option value="cmToM">cm → m</option>
+          <option value="mToCm">m → cm</option>
+          <option value="kgToG">kg → g</option>
+          <option value="gToKg">g → kg</option>
+          <option value="lToMl">L → mL</option>
+          <option value="mlToL">mL → L</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="calc-row">
+      <button class="btn primary" onclick="convertUnit()">حوّل</button>
+      <div class="result" id="unitResult">—</div>
+      <button class="copy-btn" onclick="copyResult('unitResult')">نسخ</button>
+    </div>
+  </div>
+
+  <div style="height:18px"></div>
+
+  <!-- Password -->
+  <div id="passwordTool" class="tool-card">
+    <h2>مولد كلمة السر</h2>
+    <div class="muted">أختر الطول والتعقيد.</div>
+
+    <div style="margin-top:12px" class="row">
+      <div style="width:140px">
+        <label for="passLength">الطول</label>
+        <input id="passLength" type="number" min="4" max="128" value="12">
+      </div>
+      <div style="width:220px">
+        <label for="passComplex">التعقيد</label>
+        <select id="passComplex" style="padding:12px;border-radius:12px">
+          <option value="standard">حروف + أرقام</option>
+          <option value="symbols">حروف + أرقام + رموز</option>
+          <option value="strong">حروف كبيرة + أرقام + رموز</option>
+        </select>
+      </div>
+      <div class="col"></div>
+    </div>
+
+    <div class="calc-row">
+      <button class="btn primary" onclick="generatePassword()">طلع</button>
+      <div class="result" id="passResult">—</div>
+      <button class="copy-btn" onclick="copyResult('passResult')">نسخ</button>
+    </div>
+    <div class="small-hint">نصيحة: استعمل ≥12 حرف لسر قوي.</div>
+  </div>
+
+  <div style="height:18px"></div>
+
+  <!-- Loan -->
+  <div id="loanTool" class="tool-card">
+    <h2>حاسبة القرض (فائدة بسيطة)</h2>
+    <div class="muted">الفائدة = P × r × t / 100</div>
+
+    <div style="margin-top:12px" class="row">
+      <div class="col">
+        <label for="loanPrincipal">المبلغ الأساسي (P)</label>
+        <input id="loanPrincipal" type="number" placeholder="مثال: 10000">
+      </div>
+      <div style="width:140px">
+        <label for="loanRate">النسبة (%)</label>
+        <input id="loanRate" type="number" placeholder="مثال: 5">
+      </div>
+      <div style="width:140px">
+        <label for="loanTime">المدة (سنة)</label>
+        <input id="loanTime" type="number" placeholder="مثال: 2">
+      </div>
+    </div>
+
+    <div class="calc-row">
+      <button class="btn primary" onclick="calculateLoan()">حسب</button>
+      <div class="result" id="loanResult">—</div>
+      <button class="copy-btn" onclick="copyResult('loanResult')">نسخ</button>
+    </div>
+  </div>
+
+  <div style="height:18px"></div>
+
+  <!-- Random -->
+  <div id="randomNumberTool" class="tool-card">
+    <h2>مولد عدد عشوائي</h2>
+    <div class="muted">ادخل الحد الأدنى والحد الأعلى.</div>
+
+    <div style="margin-top:12px" class="row">
+      <div style="width:120px">
+        <label for="randMin">الحد الأدنى</label>
+        <input id="randMin" type="number" value="1">
+      </div>
+      <div style="width:120px">
+        <label for="randMax">الحد الأعلى</label>
+        <input id="randMax" type="number" value="10">
+      </div>
+      <div class="col"></div>
+    </div>
+
+    <div class="calc-row">
+      <button class="btn primary" onclick="generateRandomNumber()">طلع</button>
+      <div class="result" id="randResult">—</div>
+      <button class="copy-btn" onclick="copyResult('randResult')">نسخ</button>
+    </div>
+  </div>
+
+</section>
+
+<!-- WHY -->
+<section id="why" class="container fade-up">
+  <div class="section-title">علاش QuickTotals؟</div>
+  <div class="grid-3">
+    <div class="why">
+      <h4>سريع</h4>
+      <div class="muted">نتائج فورية بلا انتظار.</div>
+    </div>
+    <div class="why">
+      <h4>خاص</h4>
+      <div class="muted">كلشي خدام فالLocal — ما كيرسل والو للسيرفر.</div>
+    </div>
+    <div class="why">
+      <h4>بلا تسجيل</h4>
+      <div class="muted">استعمل مباشرة بلا حساب.</div>
+    </div>
+    <div class="why">
+      <h4>دقيق</h4>
+      <div class="muted">معادلات صحيحة ومحسوبة.</div>
+    </div>
+    <div class="why">
+      <h4>مجاني</h4>
+      <div class="muted">استعمال حر ومجاني.</div>
+    </div>
+    <div class="why">
+      <h4>Responsive</h4>
+      <div class="muted">خدام مزيان فالتلفون والتابلت.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="container fade-up">
+  <div class="section-title">آراء المستخدمين</div>
+  <div class="grid-3">
+    <div class="testi"><strong>يونس</strong><div class="muted">"موقع بسيط وفخم — كيعاونني فالخدمة اليومية."</div></div>
+    <div class="testi"><strong>ليلى</strong><div class="muted">"التصميم نظيف والآدوات دقيقة."</div></div>
+    <div class="testi"><strong>سمير</strong><div class="muted">"كنستعمل QuickTotals باش نحسب بسرعة، ممتاز!"</div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="container fade-up">
+  <div class="section-title">الأسئلة المتكررة</div>
+  <div class="faq">
+    <div class="item">
+      <div class="q" onclick="toggleFaq(this)"><div>واش QuickTotals مجاني؟</div><div class="muted-2">+</div></div>
+      <div class="a"><p class="muted">إييه، مجاني وكل الحسابات كتتم فالكمبيوتر ديالك.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="q" onclick="toggleFaq(this)"><div>واش نقدر نخدم بلا انترنت؟</div><div class="muted-2">+</div></div>
+      <div class="a"><p class="muted">من بعد ما تحمل الصفحة، الأغلب كيشتغل أوفلاين.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="q" onclick="toggleFaq(this)"><div>كيش ننسخ النتيجة؟</div><div class="muted-2">+</div></div>
+      <div class="a"><p class="muted">كاين زر "نسخ" بجنب كل نتيجة باش تنسخها بسهولة.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="q" onclick="toggleFaq(this)"><div>شنو الدقة ديال الحسابات؟</div><div class="muted-2">+</div></div>
+      <div class="a"><p class="muted">المعادلات قياسية ودقيقة — لكن فالمسائل المالية الكبيرة تحقق مع البنك.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="q" onclick="toggleFaq(this)"><div>شنو اللغات المدعومة؟</div><div class="muted-2">+</div></div>
+      <div class="a"><p class="muted">الواجهة بالعربية (دارجة) هنا، نقدر نضيف لغات أخرى بسهولة.</p></div>
+    </div>
+
+    <div class="item">
+      <div class="q" onclick="toggleFaq(this)"><div>شنو نقدر نزيد فالموقع؟</div><div class="muted-2">+</div></div>
+      <div class="a"><p class="muted">نقدر نضيف حفظ النتائج، مشاركة، أو نشر على Netlify/Vercel.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="container">
+  <div style="display:flex;gap:10px;align-items:center;justify-content:center;margin-bottom:8px">
+    <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(90deg,#00D9FF,#3AE8FF)"></div>
+    <div style="font-weight:700">QuickTotals</div>
+  </div>
+  <div class="muted">© 2025 QuickTotals — مصمم بفخر • خاص وسريع</div>
+</footer>
+
+<button id="topBtn" title="للأعلى" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- SCRIPTS -->
+<script>
+  /* Smooth reveal */
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.fade-up').forEach((el,i)=>{
+      el.style.animationDelay = (i*0.06)+'s'; el.style.animationFillMode = 'forwards';
+    });
+
+    // init result placeholders
+    document.querySelectorAll('.result').forEach(r => { if(!r.innerText.trim()) r.innerText = '—'; });
+  });
+
+  /* NAV shrink + back button */
+  const navInner = document.querySelector('.nav-inner');
+  const topBtn = document.getElementById('topBtn');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 50) { navInner.style.transform = 'translateY(-6px)'; } else { navInner.style.transform = 'none'; }
+    topBtn.style.display = (window.scrollY > 360) ? 'block' : 'none';
+  });
+
+  /* Scroll to tool */
+  function scrollTo(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.style.boxShadow = "0 26px 80px rgba(0,0,0,0.6)";
+    setTimeout(()=>el.style.boxShadow = "", 900);
+  }
+
+  /* FAQ toggle */
+  function toggleFaq(el){
+    const body = el.nextElementSibling;
+    const sign = el.querySelector('.muted-2');
+    if(!body) return;
+    if(body.style.maxHeight && body.style.maxHeight !== "0px"){ body.style.maxHeight = null; sign.textContent = '+'; }
+    else { body.style.maxHeight = body.scrollHeight + "px"; sign.textContent = '−'; }
+  }
+
+  /* Copy result helper */
+  function copyResult(id){
+    const txt = document.getElementById(id).innerText;
+    if(!txt || txt.trim() === '—') { showToast('ما كاينش نتيجة باش تنسخ'); return; }
+    navigator.clipboard?.writeText(txt).then(()=> showToast('تم النسخ!'), ()=> showToast('النسخ ما نجحش'));
+  }
+
+  /* Tiny toast */
+  let toastTimer = null;
+  function showToast(msg){
+    if(document.getElementById('qt-toast')) document.getElementById('qt-toast').remove();
+    const t = document.createElement('div'); t.id = 'qt-toast';
+    t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='28px';
+    t.style.background='rgba(2,6,23,0.85)'; t.style.color='white'; t.style.padding='10px 14px'; t.style.borderRadius='10px';
+    t.style.zIndex=99999; t.style.fontWeight='700'; t.innerText=msg;
+    document.body.appendChild(t);
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),300) }, 2600);
+  }
+
+  /* Keyboard: Enter triggers calc in focused tool */
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      const active = document.activeElement;
+      if(!active) return;
+      const parent = active.closest('section#tools') || active.closest('.tool-card') || active.closest('#tools');
+      if(!parent) return;
+      // find visible calc button in same section
+      const btn = active.closest('.tool-card')?.querySelector('.btn.primary') || active.closest('.tool-card')?.querySelector('.btn');
+      // fallback: try buttons with onclick attribute near active
+      if(btn) btn.click();
+    }
+  });
+
+  /* ============================
+     CALCULATOR FUNCTIONS
+     ============================ */
+
+  // Percentage
+  function calculatePercentage(){
+    const orig = parseFloat(document.getElementById('percOriginal').value);
+    const perc = parseFloat(document.getElementById('percValue').value);
+    const mode = document.getElementById('percMode').value;
+    if(isNaN(orig) || isNaN(perc)){ showToast('دخل قيمة صحيحة والنسبة'); return; }
+
+    let out = '';
+    if(mode === 'increase'){
+      const r = orig * (1 + perc/100);
+      out = `${round(r)} (↑ ${perc}%)`;
+    } else if(mode === 'decrease'){
+      const r = orig * (1 - perc/100);
+      out = `${round(r)} (↓ ${perc}%)`;
+    } else {
+      const r = orig * (perc/100);
+      out = `${round(r)} (${perc}% من ${orig})`;
+    }
+    document.getElementById('percResult').innerText = out;
+  }
+
+  // Currency
+  function calculateCurrency(){
+    const amt = parseFloat(document.getElementById('curAmount').value);
+    const rate = parseFloat(document.getElementById('curRate').value);
+    if(isNaN(amt) || isNaN(rate)){ showToast('دخل المبلغ و السعر'); return; }
+    document.getElementById('curResult').innerText = round(amt * rate);
+  }
+
+  // Average
+  function calculateAverage(){
+    const raw = document.getElementById('avgNumbers').value.trim();
+    if(!raw){ showToast('دخل أرقام مفصولة بفاصلة'); return; }
+    const arr = raw.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+    if(arr.length === 0){ showToast('ما لقيتش أرقام صالحة'); return; }
+    const sum = arr.reduce((a,b)=>a+b,0);
+    const avg = sum / arr.length;
+    document.getElementById('avgResult').innerText = `${round(avg)} (n=${arr.length})`;
+  }
+
+  // BMI
+  function calculateBMI(){
+    const w = parseFloat(document.getElementById('bmiWeight').value);
+    const hcm = parseFloat(document.getElementById('bmiHeight').value);
+    if(isNaN(w) || isNaN(hcm) || hcm <= 0){ showToast('دخل الطول و الوزن'); return; }
+    const h = hcm / 100;
+    const bmi = w / (h*h);
+    let cat = '';
+    if(bmi < 18.5) cat = 'نقص فالوزن';
+    else if(bmi < 25) cat = 'وزن طبيعي';
+    else if(bmi < 30) cat = 'زيادة فالوزن';
+    else cat = 'سمنة';
+    document.getElementById('bmiResult').innerText = `${bmi.toFixed(2)} — ${cat}`;
+  }
+
+  // Unit convert
+  function convertUnit(){
+    const v = parseFloat(document.getElementById('unitValue').value);
+    const t = document.getElementById('unitType').value;
+    if(isNaN(v)){ showToast('دخل قيمة رقمية'); return; }
+    let res;
+    switch(t){
+      case 'cmToM': res = v/100; break;
+      case 'mToCm': res = v*100; break;
+      case 'kgToG': res = v*1000; break;
+      case 'gToKg': res = v/1000; break;
+      case 'lToMl': res = v*1000; break;
+      case 'mlToL': res = v/1000; break;
+      default: res = v;
+    }
+    document.getElementById('unitResult').innerText = `${res} (${t})`;
+  }
+
+  // Password
+  function generatePassword(){
+    const len = parseInt(document.getElementById('passLength').value,10);
+    const comp = document.getElementById('passComplex').value;
+    if(isNaN(len) || len < 4 || len > 128){ showToast('الطول خصو يكون 4–128'); return; }
+
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const upper = lower.toUpperCase();
+    const nums = '0123456789';
+    const syms = '!@#$%^&*()_+[]{}|;:,.<>?';
+    let chars = lower + upper + nums;
+    if(comp === 'symbols') chars += syms;
+    if(comp === 'strong') chars += syms + upper;
+
+    let out = '';
+    if(window.crypto && window.crypto.getRandomValues){
+      const arr = new Uint32Array(len);
+      window.crypto.getRandomValues(arr);
+      for(let i=0;i<len;i++) out += chars[arr[i] % chars.length];
+    } else {
+      for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
+    }
+    document.getElementById('passResult').innerText = out;
+  }
+
+  // Loan (simple interest)
+  function calculateLoan(){
+    const p = parseFloat(document.getElementById('loanPrincipal').value);
+    const r = parseFloat(document.getElementById('loanRate').value);
+    const t = parseFloat(document.getElementById('loanTime').value);
+    if(isNaN(p) || isNaN(r) || isNaN(t)){ showToast('دخل المبلغ، النسبة و المدة'); return; }
+    const interest = (p * r * t) / 100;
+    const total = p + interest;
+    document.getElementById('loanResult').innerText = `فائدة: ${round(interest)} | الإجمالي: ${round(total)}`;
+  }
+
+  // Random number
+  function generateRandomNumber(){
+    const min = parseInt(document.getElementById('randMin').value,10);
+    const max = parseInt(document.getElementById('randMax').value,10);
+    if(isNaN(min) || isNaN(max)){ showToast('دخل الحدين'); return; }
+    if(min > max){ showToast('الحد الأدنى خصو يكون ≤ الحد الأعلى'); return; }
+    const r = Math.floor(Math.random() * (max - min + 1)) + min;
+    document.getElementById('randResult').innerText = String(r);
+  }
+
+  // helper round
+  function round(n){
+    if(Math.abs(n) >= 1000000) return n.toPrecision(6);
+    return (Math.round((n + Number.EPSILON) * 10000) / 10000).toString();
+  }
+
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Premium Dark Website</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #0f0f0f;
+    color: #fff;
+  }
+  header {
+    padding: 40px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+  }
+  section {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 20px;
+  }
+
+  /* Card Base */
+  .card {
+    background: rgba(25, 25, 25, 0.65);
+    backdrop-filter: blur(14px);
+    padding: 30px;
+    border-radius: 22px;
+    margin-bottom: 30px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+    transition: 0.35s ease;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  /* Premium Gradient Border */
+  .premium-border {
+    position: relative;
+    padding: 2px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6, #ec4899);
+  }
+  .premium-border .inner {
+    background: rgba(20,20,20,0.75);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 28px;
+  }
+
+  /* Fade-up Animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.8s ease forwards; }
+.hero-header {
+    position: relative;
+    overflow: hidden;
+    background-attachment: fixed;
+  }
+
+  /* Glow effect */
+  .hero-title {
+    text-shadow: 0 0 14px #6ee7ff, 0 0 28px #3ae8ff;
+  }
+
+  /* CTA Buttons */
+  .hero-cta {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+  }
+  .cta-btn {
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #3ae8ff, #00e1ff);
+    color: #000;
+    cursor: pointer;
+    border: none;
+    transition: 0.25s ease;
+    box-shadow: 0 0 14px rgba(0,225,255,0.55);
+  }
+  .cta-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 0 24px rgba(0,225,255,0.75);
+  }
+
+  /* Parallax Light Sweep */
+  .light-sweep {
+    position: absolute;
+    top: 0;
+    left: -200%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+    animation: sweep 6s infinite linear;
+  }
+  @keyframes sweep {
+    from { left: -200%; }
+    to { left: 200%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero-header fade-up">
+  <div class="light-sweep"></div>
+    <div class="hero-inner">
+    <h1 class="hero-title">موقع بريميوم فاخر</h1>
+    <p class="hero-sub">تصميم داكن – فخم – عصري – بجودة عالية</p>
+    <div class="hero-cta">
+      <button class="cta-btn">ابدأ الآن</button>
+      <button class="cta-btn">اكتشف أكثر</button>
+  </div>
+</div>
+</header>
+<style>
+  .hero-header {
+    padding: 100px 20px;
+    text-align: center;
+    background: radial-gradient(circle at top, rgba(80,80,80,0.12), rgba(0,0,0,0.9)),
+                url('https://images.unsplash.com/photo-1522199710521-72d69614c702?auto=format&fit=crop&w=1200&q=60');
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(8px);
+  }
+  .hero-inner {
+    background: rgba(0,0,0,0.55);
+    padding: 40px 25px;
+    border-radius: 22px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    display: inline-block;
+  }
+  .hero-title {
+    font-size: 52px;
+    font-weight: 800;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  }
+  .hero-sub {
+    margin-top: 18px;
+    font-size: 20px;
+    color: #dcdcdc;
+  }
+</style>
+
+<section>
+  <div class="premium-border fade-up">
+    <div class="inner card">
+      <h2>QuickTotals</h2>
+      <p>Smart Daily Calculations</p>
+    </div>
+  </div>
+
+  <div class="premium-border fade-up">
+    <div class="inner card">
+      <h2>معلومات مهمة</h2>
+      <p>THIS IS THE BEST SITE WEBE OF CALCULATIONS</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
